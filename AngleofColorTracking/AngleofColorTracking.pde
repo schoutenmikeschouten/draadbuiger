@@ -31,8 +31,8 @@ int[] hues;
 int[] colors;
 int rangeWidth = 10;
 
-int[] angles = new int[180];
-int[] anglesII = new int[180];
+int[] angles = new int[181];
+int[] anglesII = new int[181];
 
 PImage[] outputs;
 
@@ -104,9 +104,6 @@ void draw() {
   displaylines();
 }
 
-//////////////////////
-// Detect Functions
-//////////////////////
 
 void detectColors() {
 
@@ -155,51 +152,38 @@ void displaylines() {
   strokeWeight(3);
   totalangle = 0;
   if (lines!=null) {
-    //println("size= " + lines.size());
     for (Line line : lines) {
       // lines include angle in radians, measured in double precision
       // so we can select out vertical and horizontal lines
       // They also include "start" and "end" PVectors with the position
       stroke(0, 122, 0);
       line(line.start.x, line.start.y, line.end.x, line.end.y);
-      int angle = (int)degrees((float)line.angle);
+      int angle = (int)degrees(((float)line.angle+HALF_PI));
       if (angle < -179) {
         angle = angle + 180;
       }
       if (angle < 0) {
         angle = angle + 180;
       }
-      totalangle = totalangle + angle;
-      //println(totalangle);
-      //println(lines.size());
-      
+      totalangle = totalangle + angle;      
       angles[angle] = angles[angle] +1;
     }
-   
-   
-   
+
+
+
     float max = (max(angles));
     for (int i = 0; i < 180; i = i+1) {
-      if (max == angles[i]){
+      if (max == angles[i]) {
         //println("angle =" + i); //angle of mostley measured angle
-      }      
+      }
     }
-    if(totalangle !=0){
-    println(totalangle/lines.size()); //angle of average
+    if (totalangle !=0) {
+      println(totalangle/lines.size()); //angle of average
     }
   }
   setanglestozero();
 }
 
-//int angle010 = 0;
-//int angle1020 = 0;
-//int angle2030 = 0;
-//int angle3040 = 0;
-//int angle4050 = 0;
-//int angle5060 = 0;
-//int angle6070 = 0;
-//int angle7080 = 0;
-//int angle8090 = 0;
 
 void setanglestozero() {
   for (int i = 0; i < 180; i = i+1) {
@@ -210,17 +194,13 @@ void setanglestozero() {
 
 
 void mousePressed() {
+  color c = get(mouseX, mouseY);
+  println("r: " + red(c) + " g: " + green(c) + " b: " + blue(c));
 
-  if (colorToChange > -1) {
+  int hue = int(map(hue(c), 0, 255, 0, 180));
 
-    color c = get(mouseX, mouseY);
-    println("r: " + red(c) + " g: " + green(c) + " b: " + blue(c));
+  colors[colorToChange-1] = c;
+  hues[colorToChange-1] = hue;
 
-    int hue = int(map(hue(c), 0, 255, 0, 180));
-
-    colors[colorToChange-1] = c;
-    hues[colorToChange-1] = hue;
-
-    println("color index " + (colorToChange-1) + ", value: " + hue);
-  }
+  println("value: " + hue);
 }
